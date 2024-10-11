@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestionale Aziendale Medico Futuristico</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="script.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script type="text/javascript" src="https://cdn.emailjs.com/dist/email.min.js"></script>
+</head>
+<body>
+    <!-- Header con logo e sezione amministratore -->
+    <header>
+        <div class="logo">
+            <img src="logo.png" alt="Logo Azienda" width="150">
+        </div>
+        <div class="admin-login">
+            <form id="login-form">
+                <input type="text" id="username" placeholder="Utente" required>
+                <input type="password" id="password" placeholder="Password" required>
+                <button type="button" onclick="login()">Accedi</button>
+            </form>
+        </div>
+    </header>
+
+    <!-- Sezione contenuto con navigazione a schede -->
+    <main id="main-content">
+        <nav>
+            <ul>
+                <li><a href="#" onclick="showSection('home-page')"><i class="icon-home"></i> Home</a></li>
+                <li><a href="#" onclick="showSection('registra-paziente')"><i class="icon-user"></i> Registra Paziente</a></li>
+                <li><a href="#" onclick="showSection('ordini-farmacia')"><i class="icon-cart"></i> Ordini Farmacia</a></li>
+                <li><a href="#" onclick="showSection('admin-page')"><i class="icon-settings"></i> Area Amministratore</a></li>
+            </ul>
+        </nav>
+
+        <!-- Sezioni che appaiono quando selezionate -->
+        <section id="home-page" class="section-content">
+            <h1>Home Page - Azienda Medica</h1>
+            <p>Benvenuti nel gestionale aziendale medico. Utilizzate le sezioni per navigare tra le funzionalità.</p>
+        </section>
+
+        <section id="registra-paziente" class="section-content" style="display:none;">
+            <h2>Registra Paziente</h2>
+            <form id="patient-form">
+                <input type="text" id="nome" placeholder="Nome e Cognome" required>
+                <input type="tel" id="telefono" placeholder="Numero di telefono" required>
+                <input type="email" id="email" placeholder="Email" required>
+                <input type="text" id="medico" placeholder="Medico Prescrittore" required>
+                <select id="edificio">
+                    <option value="ospedale">Ospedale</option>
+                    <option value="ambulatorio">Ambulatorio</option>
+                    <option value="abitazione">Abitazione</option>
+                    <option value="farmacia">Farmacia</option>
+                    <option value="studio_medico">Studio Medico</option>
+                </select>
+                <input type="datetime-local" id="data-installazione" required>
+                <button type="button" class="action-btn" onclick="registraPaziente()">Conferma</button>
+            </form>
+        </section>
+
+        <section id="ordini-farmacia" class="section-content" style="display:none;">
+            <h2>Registra Ordine Farmacia</h2>
+            <form id="pharmacy-form">
+                <input type="text" id="intestazione" placeholder="Intestazione Farmacia" required>
+                <input type="text" id="piva" placeholder="P.iva" required>
+                <input type="text" id="indirizzo" placeholder="Indirizzo" required>
+                <input type="tel" id="telefono-farmacia" placeholder="Telefono" required>
+                <input type="email" id="email-farmacia" placeholder="Email" required>
+                <input type="number" id="pezzi" placeholder="Qtà pezzi da ordinare" required>
+                <input type="number" step="0.01" id="prezzo" placeholder="Prezzo per pezzo" required>
+                <input type="number" step="0.01" id="sconto" placeholder="Sconto applicato" required>
+                <button type="button" class="action-btn" onclick="registraOrdine()">Conferma</button>
+            </form>
+        </section>
+
+        <!-- Sezione amministratore nascosta prima del login -->
+        <section id="admin-page" class="section-content" style="display:none;">
+            <h2>Area Amministratore</h2>
+            <div class="admin-section">
+                <h3>Conteggio Sensori Installati</h3>
+                <button class="action-btn" onclick="scaricaReport()">Scarica Report</button>
+                <button class="action-btn" onclick="inviaReport()">Invia Report</button>
+                <div id="sensor-count"></div>
+            </div>
+            <div class="admin-section">
+                <h3>Conteggio Sensori per Paziente</h3>
+                <select id="pazienti-list" onchange="visualizzaPaziente()"></select>
+                <button class="action-btn" onclick="scaricaPazienteReport()">Scarica Report</button>
+                <button class="action-btn" onclick="inviaPazienteReport()">Invia Report</button>
+                <div id="paziente-info"></div>
+            </div>
+            <div class="admin-section">
+                <h3>Report Ordini Farmacia</h3>
+                <button class="action-btn" onclick="mostraOrdini()">Mostra Report</button>
+                <div id="report-ordini"></div>
+                <button class="action-btn" onclick="scaricaOrdineReport()">Scarica Report</button>
+                <button class="action-btn" onclick="inviaOrdineReport()">Invia Report</button>
+            </div>
+        </section>
+
+        <section id="modifica-paziente" class="section-content" style="display:none;">
+            <h2>Modifica Paziente</h2>
+            <form id="modify-patient-form">
+                <select id="pazienti-list" onchange="visualizzaPaziente()"></select>
+                <div id="paziente-info"></div>
+                <input type="tel" id="telefono" placeholder="Nuovo numero di telefono" required>
+                <input type="email" id="email" placeholder="Nuova email" required>
+                <input type="text" id="medico" placeholder="Medico Prescrittore" required>
+                <select id="edificio">
+                    <option value="ospedale">Ospedale</option>
+                    <option value="ambulatorio">Ambulatorio</option>
+                    <option value="abitazione">Abitazione</option>
+                    <option value="farmacia">Farmacia</option>
+                    <option value="studio_medico">Studio Medico</option>
+                </select>
+                <input type="datetime-local" id="data-installazione" required>
+                <button type="button" class="action-btn" onclick="modificaPaziente()">Modifica Paziente</button>
+            </form>
+        </section>
+
+        <div class="admin-section">
+            <h3>Reset Gestionale</h3>
+            <button class="action-btn" onclick="resetGestionale()">Reset</button>
+        </div>
+    </main>
+
+    <footer>
+        <a href="manuale_sensore.pdf" download>Manuale Installazione Sensore</a>
+        <a href="biglietto_visita.png" download>Biglietto da Visita</a>
+    </footer>
+</body>
+</html>

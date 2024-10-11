@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Gestionale Farmaceutico</title>
+    <link rel="stylesheet" href="style.css">
+    <script defer src="script.js"></script>
+</head>
+<body>
+
+    <header>
+        <div class="logo">
+            <h1>PharmaManage Admin</h1>
+        </div>
+    </header>
+
+    <main>
+        <!-- Sezione Modifica Installazione -->
+        <section id="modifica-installazione">
+            <h2>Modifica Installazione</h2>
+            <form id="modifica-form">
+                <div class="input-group">
+                    <label for="seleziona-paziente">Seleziona Paziente:</label>
+                    <select id="seleziona-paziente">
+                        <!-- Popolato dinamicamente -->
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label for="nuova-installazione">Nuova Data Installazione:</label>
+                    <input type="date" id="nuova-installazione" required>
+                </div>
+                <button type="submit" class="btn confirm">Conferma Modifica</button>
+            </form>
+        </section>
+    </main>
+
+</body>
+</html>
